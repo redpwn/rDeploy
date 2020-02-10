@@ -1,0 +1,8 @@
+version: "2.2"
+services:
+  problem:
+    build: .
+    ports: 
+      - ${PORT}:[PORT]
+    cpus: '0.1'
+    mem_limit: 100M
