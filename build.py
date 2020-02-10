@@ -1,11 +1,16 @@
 import os, yaml
-import hash_file from util
+from util import hash_file
+import tempfile
+import shutil
+
+temp_dir = tempfile.mkdtemp()
+print(temp_dir)
 
 config = eval(open("config/config.json", "r").read().strip())
 xinetd_template = open("config/ctf.xinetd.sample", "r").read().strip()
 compose_template = open("config/docker-compose.yml.sample", "r").read().strip()
 
-def generate_xinted(problem, data):
+def generate_xinetd(problem, data):
   f = open(problem + "/ctf.xinetd", "w")
   xinted = xinetd_template.replace("[BINARY]", data["binary"])
 
@@ -25,6 +30,18 @@ def generate_docker(problem, data):
     else:
       print("Skipping docker for " + problem)
 
+def save_files(problem, data):
+  for f in data["provide"]:
+    file_path = os.path.join(problem, f)
+    file_name = os.path.basename(file_path)
+    
+    file_name_head = file_name.split(".")[0]
+    file_name_tail = ".".join(file_name.split(".")[1:])
+    
+    file_dest = os.path.join(temp_dir, file_name_head + "-" + hash_file(file_path) + file_name_tail)
+
+    shutil.copyfile(file_path, file_dest)
+
 if __name__ == "__main__":
   baseDir = config["problemDirectory"]
 
@@ -41,7 +58,10 @@ if __name__ == "__main__":
           if "binary" in data:
             generate_xinetd(problem, data)
           generate_docker(problem, data)
-
+          save_files(problem, data)
         except Exception as exc:
+          print(exc)
           print("Failed to build " + problem)
+  
 
+  shutil.rmtree(temp_dir)

@@ -1,3 +1,5 @@
+import hashlib
+
 def hash_file(path):
 	BUF_SIZE = 65536
 
