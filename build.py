@@ -25,11 +25,16 @@ if __name__ == "__main__":
             f.close()
 
           if not os.path.exists(problem + "/docker-compose.yml"):
-            f = open(problem + "/docker-compose.yml", "w")
-            compose = compose_template.replace("[PORT]", str(data["port"]))
+            if os.path.exists(problem + "/Dockerfile"):
+              f = open(problem + "/docker-compose.yml", "w")
+              compose = compose_template.replace("[PORT]", str(data["port"]))
+            
+              f.write(compose)
+              f.close()
 
-            f.write(compose)
-            f.close()
-        except yaml.YAMLError as exc:
-          print(exc)
+              print("Successfully built " + problem)
+            else:
+              print("Skipping build for " + problem)
+        except Exception as exc:
+          print("Failed to build " + problem)
 
