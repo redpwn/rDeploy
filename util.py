@@ -12,3 +12,13 @@ def hash_file(path):
 					break
 			sha1.update(data)
 	return sha1.hexdigest()
+
+def get_key(problem, baseDir):
+	assert problem.startswith(baseDir)
+
+	key = problem[len(baseDir):]
+
+	if key[0] == '/':
+		key = key[1:] 
+
+	return key

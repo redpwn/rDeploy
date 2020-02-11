@@ -1,7 +1,7 @@
 import os
 import yaml
 import json
-from util import hash_file
+from util import hash_file, get_key
 import tempfile
 import shutil
 
@@ -67,17 +67,18 @@ if __name__ == "__main__":
   baseDir = config["problemDirectory"]
 
   cats = [(baseDir + "/" + x) for x in os.listdir(baseDir) if not x.startswith(".") and os.path.isdir(baseDir + "/" + x)]
+  cats.sort()
  
-  for cat in cats:
+  for ci in range(len(cats)):
+    cat = cats[ci]
+
     problems = [(cat + "/" + x) for x in os.listdir(cat) if not x.startswith(".") and os.path.isdir(cat + "/" + x)]
+    problems.sort()
 
-    for problem in problems:
-      assert problem.startswith(baseDir)
-
-      key = problem[len(baseDir):]
-
-      if key[0] == '/':
-        key = key[1:]
+    for pi in range(len(problems)):
+      problem = problems[pi]
+      
+      key = get_key(problem, baseDir)
       
       print("Loading " + key)
 
@@ -98,6 +99,7 @@ if __name__ == "__main__":
             "max": config["points"]["max"]
           }
           ret["id"] = key
+          ret["port"] = config["ports"]["base"] + config["ports"]["mod"] * ci + ((config["ports"]["A"] * pi) % config["ports"]["mod"])
           build_data[key] = ret
 
           load_flag(problem, data, key)
@@ -112,7 +114,7 @@ if __name__ == "__main__":
   os.makedirs(export_dir)
   
   shutil.copytree(temp_dir, os.path.join(export_dir, config["fileDirectory"]))
-  with open(os.path.join(export_dir, "data.json"), "w") as f:
+  with open(os.path.join(export_dir, "config.json"), "w") as f:
     arr = []
     for key, value in build_data.iteritems():
       arr.append(value)

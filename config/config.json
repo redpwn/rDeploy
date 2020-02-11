@@ -1,9 +1,15 @@
 {
+  "host": "chall.redpwn.net",
   "problemDirectory": "./data/test",
   "exportDirectory": "export",
   "fileDirectory": "files",
   "points": {
     "max": 500,
     "min": 50
+  },
+  "ports": {
+    "base": 3000,
+    "mod": 937,
+    "A": 709
   }
 }
