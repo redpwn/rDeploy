@@ -22,7 +22,13 @@ def deploy(up=True):
       assert port != None
       
       if os.path.exists(problem + "/docker-compose.yml"):
-        p = subprocess.Popen(["docker-compose", "up" if up else "down", "-d"], cwd=problem, env={"PORT": str(port)})
+        args = ["docker-compose"]
+        if up:
+          args.extend(["up", "--build", "-d"])
+        else:
+          args.extend(["stop"])
+
+        p = subprocess.Popen(args, cwd=problem, env={"PORT": str(port)})
         
         stdout, stderr = p.communicate()
         
@@ -32,4 +38,4 @@ def deploy(up=True):
           print("Error when deploying " + problem)
 
 if __name__ == "__main__":
-  deploy()
+  deploy(True)
