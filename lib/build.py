@@ -63,7 +63,7 @@ def load_flag(problem, data, key):
     with open(os.path.join(problem, data["flag_file"]), "r") as f:
       build_data[key]["flag"] = f.read().strip()
 
-if __name__ == "__main__":
+def build():
   baseDir = config["problemDirectory"]
 
   cats = [(baseDir + "/" + x) for x in os.listdir(baseDir) if not x.startswith(".") and os.path.isdir(baseDir + "/" + x)]

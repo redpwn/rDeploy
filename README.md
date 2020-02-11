@@ -2,7 +2,7 @@
 
 RedpwnCTF's automated deployment solution
 
-# Documentation
+## Problem Files
 
 RedpwnCTF uses standardized YAML "challenge definition files" to specify deployment instructions to the automated deployment software. Also, the information stored in the file is generally useful information that the organizers use to put the challenges on CTFd.
 
@@ -24,6 +24,8 @@ root /
   ...
 ```
 
-# Todo
-- Rewrite `bot.py` to integrate with current setup (it's currently copied and assumes a config file in `dockers`)
-- Test build script and deployment to make sure everything is working properly
+## Usage
+
+```
+python main.py
+```
