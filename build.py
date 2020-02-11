@@ -8,7 +8,7 @@ import shutil
 temp_dir = tempfile.mkdtemp()
 build_data = {}
 
-config = eval(open("config/config.json", "r").read().strip())
+config = json.loads(open("config/config.json", "r").read().strip())
 xinetd_template = open("config/ctf.xinetd.sample", "r").read().strip()
 compose_template = open("config/docker-compose.yml.sample", "r").read().strip()
 
@@ -109,8 +109,9 @@ if __name__ == "__main__":
           print("Failed to build " + problem)
   
   export_dir = config["exportDirectory"]
-  
-  shutil.rmtree(export_dir)
+ 
+  if os.path.exists(export_dir):
+    shutil.rmtree(export_dir)
   os.makedirs(export_dir)
   
   shutil.copytree(temp_dir, os.path.join(export_dir, config["fileDirectory"]))

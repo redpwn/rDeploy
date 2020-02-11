@@ -1,8 +1,8 @@
-import os, yaml, subprocess
+import os, yaml, subprocess, json
 from util import get_key
 
-config = eval(open("config/config.json", "r").read().strip())
-build_config = eval(open(config["exportDirectory"] + "/config.json", "r").read().strip())
+config = json.loads(open("config/config.json", "r").read().strip())
+build_config = json.loads(open(config["exportDirectory"] + "/config.json", "r").read().strip())
 
 def deploy(up=True):
   baseDir = config["problemDirectory"]
