@@ -1,3 +1,5 @@
 {
-  "problemDirectory": "./data/test"
+  "problemDirectory": "./data/test",
+  "exportDirectory": "export",
+  "fileDirectory": "files"
 }

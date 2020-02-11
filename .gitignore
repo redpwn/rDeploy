@@ -1,5 +1,7 @@
 # Problem Data
 data
+# Exported Data
+export
 
 *.swp
 *.pyc
