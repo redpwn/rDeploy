@@ -40,9 +40,10 @@ def save_files(problem, data, key):
     file_path = os.path.join(problem, f)
     file_name = os.path.basename(file_path)
     
-    file_name_head = file_name.split(".")[0]
-    file_name_tail = ".".join(file_name.split(".")[1:])
-    dest_name = file_name_head + "-" + hash_file(file_path) + "." + file_name_tail
+    file_name_parts = file_name.split(".")
+    file_name_parts[0] = file_name_parts[0] + "-" + hash_file(file_path)
+    
+    dest_name = ".".join(file_name_parts)
     file_dest = os.path.join(temp_dir, dest_name)
     
     shutil.copyfile(file_path, file_dest)
@@ -50,6 +51,18 @@ def save_files(problem, data, key):
     files.append(dest_root + "/" + dest_name)
 
   build_data[key]["files"] = files
+
+def load_flag(problem, data, key):
+  # Exactly one must be true
+  assert ("flag" in data) ^ ("flag_file" in data)
+  
+  if "flag" in data:
+    build_data[key]["flag"] = data["flag"]
+  
+  if "flag_file" in data:
+    with open(os.path.join(problem, data["flag_file"]), "r") as f:
+      build_data[key]["flag"] = f.read().strip()
+
 if __name__ == "__main__":
   baseDir = config["problemDirectory"]
 
@@ -76,8 +89,18 @@ if __name__ == "__main__":
             generate_xinetd(problem, data)
           generate_docker(problem, data)
 
-          build_data[key] = data
+          ret = {}
+          ret["name"] = data["name"]
+          ret["author"] = data["author"]
+          ret["description"] = data["description"]
+          ret["points"] = {
+            "min": config["points"]["min"],
+            "max": config["points"]["max"]
+          }
+          ret["id"] = key
+          build_data[key] = ret
 
+          load_flag(problem, data, key)
           save_files(problem, data, key)
         except Exception as exc:
           print(exc)
@@ -90,5 +113,9 @@ if __name__ == "__main__":
   
   shutil.copytree(temp_dir, os.path.join(export_dir, config["fileDirectory"]))
   with open(os.path.join(export_dir, "data.json"), "w") as f:
-    json.dump(build_data, f)
+    arr = []
+    for key, value in build_data.iteritems():
+      arr.append(value)
+
+    json.dump(arr, f)
   shutil.rmtree(temp_dir)

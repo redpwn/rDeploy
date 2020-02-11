@@ -1,5 +1,9 @@
 {
   "problemDirectory": "./data/test",
   "exportDirectory": "export",
-  "fileDirectory": "files"
+  "fileDirectory": "files",
+  "points": {
+    "max": 500,
+    "min": 50
+  }
 }
