@@ -22,3 +22,15 @@ def get_key(problem, baseDir):
 		key = key[1:] 
 
 	return key
+
+def format_description(desc, host, port):
+  port = str(port)
+
+  desc = desc.replace("{{host}}", host)
+  desc = desc.replace("{{port}}", port)
+
+  url = "http://" + host + ":" + port
+
+  desc = desc.replace("{{url}}", "[" + url + "](" + url + ")")
+
+  return desc

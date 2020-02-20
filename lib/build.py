@@ -1,7 +1,7 @@
 import os
 import yaml
 import json
-from util import hash_file, get_key
+from util import hash_file, get_key, format_description
 import tempfile
 import shutil
 
@@ -79,6 +79,7 @@ def build():
       problem = problems[pi]
       
       key = get_key(problem, baseDir)
+      category = get_key(cat, baseDir)
       
       print("Loading " + key)
 
@@ -93,13 +94,18 @@ def build():
           ret = {}
           ret["name"] = data["name"]
           ret["author"] = data["author"]
-          ret["description"] = data["description"]
+          ret["category"] = category
           ret["points"] = {
             "min": config["points"]["min"],
             "max": config["points"]["max"]
           }
           ret["id"] = key
           ret["port"] = config["ports"]["base"] + config["ports"]["mod"] * ci + ((config["ports"]["A"] * pi) % config["ports"]["mod"])
+          
+          # Process description last so we have port defined
+          ret["description"] = format_description(data["description"], config["host"], ret["port"])
+          
+          
           build_data[key] = ret
 
           load_flag(problem, data, key)
@@ -120,5 +126,5 @@ def build():
     for key, value in build_data.iteritems():
       arr.append(value)
 
-    json.dump(arr, f)
+    json.dump(arr, f, indent=2)
   shutil.rmtree(temp_dir)
