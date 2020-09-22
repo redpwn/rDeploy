@@ -1,3 +1,5 @@
+## rDeploy is deprecated. Use [rCDS](https://github.com/redpwn/rcds) instead.
+
 # RedpwnCTF Deployment
 
 RedpwnCTF's automated deployment solution
